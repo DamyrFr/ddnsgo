@@ -1,0 +1,14 @@
+[Unit]
+Description=Dynamic DNS Client
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/ddnsgo
+Restart=always
+RestartSec=60
+User=ddnsgo
+Group=ddnsgo
+Environment="DDNSGO_CONFIG=/etc/ddnsgo.yaml"
+
+[Install]
+WantedBy=multi-user.target

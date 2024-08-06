@@ -1,0 +1,6 @@
+provider: cloudflare
+cloudflare:
+  api_token: your_api_key_here
+  zone_id: your_zone_id_here
+  record_id: your_record_id_here
+  record_name: your_record_name_here
