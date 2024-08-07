@@ -1,33 +1,114 @@
 # DDNSGo
 
-DDNSGo is a simple Dynamic DNS programm. It's build in Golang.
+DDNSGo is a simple Dynamic DNS program built in Go. It automatically updates your DNS records when your IP address changes.
 
-# Providers
+## Features
 
-For now I only support Cloudflare. If I have time for that, I will add somme others.
+- Lightweight and efficient
+- Supports Cloudflare as a DNS provider
+- Configurable via environment variables or YAML file
+- Easy to set up and use
 
-## Cloudflare
+## Supported Providers
 
-You can configure it using environement variables or by the following config file on 
+Currently, DDNSGo supports the following DNS providers:
 
-```
+- Cloudflare
+
+We plan to add support for more providers in the future. Contributions are welcome!
+
+## Configuration
+
+### Cloudflare
+
+You can configure DDNSGo using environment variables or a YAML config file.
+
+#### YAML Configuration
+
+Create a file named `ddnsgo.yaml` with the following structure:
+
+```yaml
 provider: cloudflare
 cloudflare:
-  api_token: XXXXXXX # API token create it on you profile
-  zone_id: BBBBBB # The zone ID on the main page of zone
-  record_id: RRRRR # Get it bu API
-  record_name: DDDD # Subdomain to use
+  api_token: XXXXXXX # API token (create in your Cloudflare profile)
+  zone_id: BBBBBB    # The zone ID (found on the main page of your zone)
+  record_id: RRRRR   # Get it via API (see below)
+  record_name: DDDD  # Subdomain to update
 ```
 
-Get the record_id by API (using curl) :
+#### Environment Variables
+
+Alternatively, you can use the following environment variables:
 
 ```
-curl --request GET  --url https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_ID/dns_records --header 'Content-Type: application/json' --header 'Authorization: Bearer YOUR_API_KEY' | jq
+DDNSGO_PROVIDER=cloudflare
+DDNSGO_CLOUDFLARE_API_TOKEN=XXXXXXX
+DDNSGO_CLOUDFLARE_ZONE_ID=BBBBBB
+DDNSGO_CLOUDFLARE_RECORD_ID=RRRRR
+DDNSGO_CLOUDFLARE_RECORD_NAME=DDDD
 ```
 
-# Installation 
+#### Getting the Record ID
 
-Building from source: 
+To get the `record_id`, use the following curl command:
+
+```bash
+curl --request GET \
+  --url https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_ID/dns_records \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer YOUR_API_TOKEN' | jq
 ```
-GOARCH=arm64 GOOS=linux CGO-ENABLED=0 go build .
+
+Replace `YOUR_ZONE_ID` and `YOUR_API_TOKEN` with your actual values.
+
+## Installation
+
+### Building from Source
+
+To build DDNSGo from source, use the following command:
+
+```bash
+GOARCH=arm64 GOOS=linux CGO_ENABLED=0 go build .
 ```
+
+Adjust `GOARCH` and `GOOS` as needed for your target system.
+
+### Systemd Service
+
+To run DDNSGo as a systemd service, create a file named `/etc/systemd/system/ddnsgo.service` with the following content:
+
+```ini
+[Unit]
+Description=Dynamic DNS Client
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/ddnsgo
+Restart=always
+RestartSec=60
+User=nobody
+Group=nogroup
+Environment="DDNSGO_CONFIG=/etc/ddnsgo.yaml"
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Then enable and start the service:
+
+```bash
+sudo systemctl enable ddnsgo
+sudo systemctl start ddnsgo
+```
+
+## Usage
+
+Once configured and running, DDNSGo will periodically check your public IP address and update your DNS record if it has changed.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+GNU General Public License v3.0
