@@ -88,9 +88,8 @@ After=network.target
 ExecStart=/usr/local/bin/ddnsgo
 Restart=always
 RestartSec=60
-User=nobody
-Group=nogroup
-Environment="DDNSGO_CONFIG=/etc/ddnsgo.yaml"
+User=YOURUSER
+Group=YOURUSER
 
 [Install]
 WantedBy=multi-user.target
