@@ -1,4 +1,4 @@
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DamyrFr/ddnsgo/CI?label=build)
+![GitHub Workflow Status](https://github.com/DamyrFr/ddnsgo/actions/workflows/go.yml/badge.svg)
 
 # DDNSGo
 
