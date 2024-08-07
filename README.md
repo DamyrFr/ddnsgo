@@ -1,3 +1,5 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/DamyrFr/ddnsgo/CI?label=build)
+
 # DDNSGo
 
 DDNSGo is a simple Dynamic DNS program built in Go. It automatically updates your DNS records when your IP address changes.
