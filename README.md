@@ -29,5 +29,5 @@ curl --request GET  --url https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_I
 
 Building from source: 
 ```
-GOOS=<os> GOARCH=<arch> go build -o bin/ddnsgo .
+GOARCH=arm64 GOOS=linux CGO-ENABLED=0 go build .
 ```
