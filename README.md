@@ -24,3 +24,10 @@ Get the record_id by API (using curl) :
 ```
 curl --request GET  --url https://api.cloudflare.com/client/v4/zones/YOUR_ZONE_ID/dns_records --header 'Content-Type: application/json' --header 'Authorization: Bearer YOUR_API_KEY' | jq
 ```
+
+# Installation 
+
+Building from source: 
+```
+GOOS=<os> GOARCH=<arch> go build -o bin/ddnsgo .
+```

@@ -1,15 +1,15 @@
-package main
+package providers
 
 import (
-	"net/http"
 	"io"
+	"net/http"
 )
 
 type DNSProvider interface {
 	UpdateRecord(ip string) error
 }
 
-func getPublicIP() (string, error) {
+func GetPublicIP() (string, error) {
 	resp, err := http.Get("https://api.ipify.org")
 	if err != nil {
 		return "", err

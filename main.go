@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/DamyrFr/ddnsgo/pkg/providers"
 	"github.com/spf13/viper"
 )
 
@@ -14,10 +16,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	var provider DNSProvider
+	var provider providers.DNSProvider
 	switch config.GetString("provider") {
 	case "cloudflare":
-		provider, err = NewCloudflareProvider(config)
+		provider, err = providers.NewCloudflareProvider(config)
 		if err != nil {
 			fmt.Printf("Error initializing Cloudflare provider: %v\n", err)
 			os.Exit(1)
@@ -30,10 +32,10 @@ func main() {
 	runUpdateLoop(provider)
 }
 
-func runUpdateLoop(provider DNSProvider) {
+func runUpdateLoop(provider providers.DNSProvider) {
 	lastIP := ""
 	for {
-		currentIP, err := getPublicIP()
+		currentIP, err := providers.GetPublicIP()
 		if err != nil {
 			fmt.Printf("Error getting public IP: %v\n", err)
 			time.Sleep(5 * time.Minute)
