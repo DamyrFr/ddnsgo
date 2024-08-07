@@ -5,10 +5,13 @@ on:
     tags:
       - 'v*' # This will trigger the workflow on pushing tags that start with 'v'
 
+permissions:
+  contents: write # This line gives the workflow permission to create releases
+
 jobs:
 
   build:
-    name: Build and Release
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -50,36 +53,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Download artifacts
         uses: actions/download-artifact@v2
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ${{ github.event.repository.name }}-amd64/${{ github.event.repository.name }}-amd64
+            ${{ github.event.repository.name }}-arm64/${{ github.event.repository.name }}-arm64
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset amd64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}-amd64/${{ github.event.repository.name }}-amd64
-          asset_name: ${{ github.event.repository.name }}-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload Release Asset arm64
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}-arm64/${{ github.event.repository.name }}-arm64
-          asset_name: ${{ github.event.repository.name }}-arm64
-          asset_content_type: application/octet-stream
